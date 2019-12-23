@@ -17,6 +17,9 @@ publish: &publish
                   - ~/.cache/yarn
               key: v1-cache-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "package.json" }}-{{ arch }}
         - run:
+              name: Install expo cli
+              command: npx install -g expo-cli
+        - run:
               name: Login into Expo
               command: npx expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
         - run:
