@@ -18,7 +18,7 @@ publish: &publish
               key: v1-cache-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "package.json" }}-{{ arch }}
         - run:
               name: Install expo cli
-              command: npm install -g expo-cli
+              command: sudo npm install -g expo-cli
         - run:
               name: Login into Expo
               command: npx expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
@@ -35,25 +35,11 @@ publish: &publish
               command: npx expo publish --non-interactive --max-workers 1 --release-channel $EXPO_RELEASE_CHANNEL
 
 jobs:
-    publish_to_expo_dev:
-        environment:
-            EXPO_RELEASE_CHANNEL: dev
-        <<: *publish
-
-    publish_to_expo_prod:
-        environment:
-            EXPO_RELEASE_CHANNEL: default
+    publish_to_expo:
         <<: *publish
 
 workflows:
     version: 2
     my_app:
         jobs:
-            - publish_to_expo_dev:
-                  filters:
-                      branches:
-                          only: development
-            - publish_to_expo_prod:
-                  filters:
-                      branches:
-                          only: master
+            - publish_to_expo
